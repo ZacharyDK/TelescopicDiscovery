@@ -1,0 +1,12 @@
+Telescope Planet Discovery
+
+Radar + 2processing unit + copper cable + 2 iron gear wheel = Radiotelescope 
+Decider combinator + 2 copper cable + iron gear wheel = Volatile-memory-unit (VMU)
+16 Volatile memory units + 5 battery = writable volatile memory  (WVM)
+Telescope is a furnace - takes writable volatile memory unit or voyager memory units or large volatile memory bank. 
+telescope + WVM = Astronomical data. 
+Voyager memory units = volatile memory unit * 16 + portable fission reactor. VoyagerMU can be written to, and unpacked. 
+
+Astronomical data - research done by using a recipe in a data processor. Astronomical data --> WVM 
+
+Expense will be dictated by how many science packs are in the planet discovery.
