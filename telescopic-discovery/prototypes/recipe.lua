@@ -17,7 +17,7 @@ data:extend({
           {type ="item", name ="writable-memory", amount = 1},
         },
   
-        energy_required = 75,
+        energy_required = 60,
         results =
         {
           {type ="item", name ="astronomical-data", amount = 1, ignored_by_productivity = 9999},
@@ -182,3 +182,53 @@ data:extend({
       allow_productivity = false,
     },
 })
+
+local function get_data_cost(input_science_pack_name)
+
+  local out = 100
+  if(string.find(input_science_pack_name,"automation")) then out= 20 end
+  if(string.find(input_science_pack_name,"logistic")) then out= 30 end
+  if(string.find(input_science_pack_name,"military")) then out= 35 end
+  if(string.find(input_science_pack_name,"chemical")) then out= 45 end
+  if(string.find(input_science_pack_name,"production")) then out= 60 end
+  if(string.find(input_science_pack_name,"utility")) then out= 70 end   
+  if(string.find(input_science_pack_name,"promethium")) then out= 150 end
+
+  return out
+end
+
+local function create_data_to_science_recipe(input_science_pack_name)
+
+    local recipe_name = input_science_pack_name .. "-from-data"
+    local data_cost = get_data_cost(input_science_pack_name)
+    return {
+        type = "recipe",
+        name = recipe_name,
+        localised_name = {"", {"item-name."..input_science_pack_name}, "item-name.from-data"},
+        category ="data-processing",
+        enabled = true,
+        subgroup = "telescope",
+        ingredients =
+        {
+          {type ="item", name ="astronomical-data", amount = data_cost},
+          {type ="item", name =input_science_pack_name, amount = 1},
+        },
+  
+        energy_required = 80,
+        results =
+        {
+          {type ="item", name ="writable-memory", amount = math.floor(data_cost/3), ignored_by_productivity = 9999},
+          {type ="item", name =input_science_pack_name, amount = 2},
+        },
+        allow_productivity = true,
+        allow_quality = false,
+        auto_recycle = false,
+        main_product =input_science_pack_name,
+        maximum_productivity = 3,
+        order = "g" .. tostring(data_cost),
+    }
+end
+
+for s in pairs(data.raw.subgroup["science-pack"]) do
+  data:extend({create_data_to_science_recipe(s)})
+end

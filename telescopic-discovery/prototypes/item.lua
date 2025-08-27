@@ -15,7 +15,7 @@ data:extend({
     inventory_move_sound = item_sounds.combinator_inventory_move,
     pick_sound = item_sounds.combinator_inventory_pickup,
     drop_sound = item_sounds.combinator_inventory_move,
-    stack_size = 32,
+    stack_size = 48,
   },
   {
     type = "item",
@@ -26,7 +26,7 @@ data:extend({
     inventory_move_sound = item_sounds.combinator_inventory_move,
     pick_sound = item_sounds.combinator_inventory_pickup,
     drop_sound = item_sounds.combinator_inventory_move,
-    stack_size = 32/4,
+    stack_size = 24,
     auto_recycle = false,
   },
   {
@@ -87,11 +87,12 @@ local function create_hidden_research_item(input_planet_name)
     return 	{
 		type = "tool",
 		name = input_planet_name .. "-discovery-progress",
+    localised_name = {"?", {"", {"space-location."..input_planet_name}, "item-name.discovery-progress"}, {"planet."..input_planet_name}, "item-name.discovery-progress"},
 		hidden = true,
 		--icon = "__base__/graphics/icons/signal/signal-science-pack.png",
 		--icon_size = 64,
     icons = create_progress_recipe_icon(input_planet_name),
-		subgroup = "science-pack",
+		--subgroup = "science-pack",
 		order = "z-["..input_planet_name .. "]",
 		stack_size = 200,
 		default_import_location = "nauvis",
@@ -142,6 +143,7 @@ local function create_research_progress_recipe(input_planet_name)
         icons = create_progress_recipe_icon(input_planet_name),
         type = "recipe",
         name = input_planet_name .. "-data-process",
+        localised_name = {"?", {"", {"space-location."..input_planet_name}, "item-name.discovery-progress"}, {"planet."..input_planet_name}, "item-name.discovery-progress"},
         category ="data-processing",
         enabled = true,
         subgroup = "telescope",
@@ -150,7 +152,7 @@ local function create_research_progress_recipe(input_planet_name)
           {type ="item", name ="astronomical-data", amount = 1},
         },
   
-        energy_required = 120,
+        energy_required = 30,
         results =
         {
           {type ="item", name ="writable-memory", amount = 1, ignored_by_productivity = 9999},
@@ -182,7 +184,7 @@ local function update_planet_research(input_planet_name) -- Assuming planet rese
 
     local progress_name = input_planet_name .. "-discovery-progress"
     local research_name = "planet-discovery-" .. input_planet_name
-    local data_cost_per_distance = 350 --TODO make mod setting
+    local data_cost_per_distance = 150 --TODO make mod setting
 
     local distance = 10
     if(data.raw.planet[input_planet_name]~= nil) then
