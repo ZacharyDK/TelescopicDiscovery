@@ -40,6 +40,8 @@ data:extend({
     drop_sound = item_sounds.combinator_inventory_move,
     stack_size = 32/4,
     auto_recycle = false,
+    spoil_ticks = 20 * minute,
+    spoil_result = "writable-memory",
   },
   {
     type = "item",
@@ -62,14 +64,26 @@ data:extend({
     inventory_move_sound = item_sounds.metal_large_inventory_move,
     pick_sound = item_sounds.metal_large_inventory_pickup,
     drop_sound = item_sounds.metal_large_inventory_move,
-    --place_result = "radar",
+    place_result = "radiotelescope",
     stack_size = 50,
     random_tint_color = item_tints.iron_rust
   },
-  --TODO data processor
+  {
+    type = "item",
+    name = "telescopic-data-processor",
+    icon = "__telescopic-discovery__/graphics/icons/cybernetics-facility-icon.png",
+    subgroup = "telescope",
+    order = "a[memory]-e[telescopic-data-processor]",
+    inventory_move_sound = item_sounds.metal_large_inventory_move,
+    pick_sound = item_sounds.metal_large_inventory_pickup,
+    drop_sound = item_sounds.metal_large_inventory_move,
+    place_result = "telescopic-data-processor",
+    stack_size = 25,
+  },
+
 })
 
-local function create_hidden_research_item(input_planet_name)
+local function Telescopic:create_hidden_research_item(input_planet_name)
     return 	{
 		type = "tool",
 		name = input_planet_name .. "-discovery-progress",
@@ -86,8 +100,8 @@ local function create_hidden_research_item(input_planet_name)
 	}
 end
 
-local function create_progress_recipe_icon(input_planet_name)
-    if data.raw.planet[input_planet_name]icon == nil then
+local function Telescopic:create_progress_recipe_icon(input_planet_name)
+    if (data.raw.planet[input_planet_name].icon == nil) then
         return {
             {
                 icon = "__telescopic-discovery__/graphics/icons/radar.png",
@@ -96,10 +110,10 @@ local function create_progress_recipe_icon(input_planet_name)
         }
     end
 
-    return{
+    return {
         {
-            icon = data.raw.planet[input_planet_name]icon,
-            icon_size = data.raw.planet[input_planet_name]icon_size,
+            icon = data.raw.planet[input_planet_name].icon,
+            icon_size = data.raw.planet[input_planet_name].icon_size,
         },
         {
             icon = "__telescopic-discovery__/graphics/icons/radar.png",
@@ -110,15 +124,15 @@ local function create_progress_recipe_icon(input_planet_name)
 end
 
 
-local function create_research_progress_recipe(input_planet_name)
+local function Telescopic:create_research_progress_recipe(input_planet_name)
     local progress_name = input_planet_name .. "-discovery-progress"
     table.insert(data.raw.lab.inputs,progress_name)
     return {
-        icons = create_progress_recipe_icon(input_planet_name)
+        icons = create_progress_recipe_icon(input_planet_name),
         type = "recipe",
         name = input_planet_name .. "-data-process",
         category ="data-processing",
-        enabled = false,
+        enabled = true,
         subgroup = "telescope",
         ingredients =
         {
@@ -140,7 +154,7 @@ local function create_research_progress_recipe(input_planet_name)
     }
 end
 
-local function does_planet_discovery_research_exist(input_planet_name)
+local function Telescopic:does_planet_discovery_research_exist(input_planet_name)
     local test_name = "planet-disovery-" .. input_planet_name
     local out = data.raw.technology[test_name] ~= nil
     return out
@@ -148,7 +162,7 @@ end
 
 local planet_blacklist = {}
 
-local function update_planet_research(input_planet_name) -- Assuming planet research exist
+local function Telescopic:update_planet_research(input_planet_name) -- Assuming planet research exist
     local progress_name = input_planet_name .. "-discovery-progress"
     local research_name = "planet-disovery-" .. input_planet_name
     local distance = data.raw.planet[input_planet_name]["distance"]
@@ -205,10 +219,12 @@ end
 --local planet_map = {}
 
 for planet in pairs(data.raw.planet) do
-    local exist = does_planet_discovery_research_exist(planet)
+    local exist = Telescopic.does_planet_discovery_research_exist(planet)
     if(exist) then
-        create_hidden_research_item(planet)
-        create_research_progress_recipe(planet)
-        update_planet_research(planet)
+        data:extend({
+          Telescopic.create_hidden_research_item(planet),
+          Telescopic.create_research_progress_recipe(planet),
+        })
+        Telescopic.update_planet_research(planet)
     end
 end
