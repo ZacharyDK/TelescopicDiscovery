@@ -3,7 +3,7 @@ local item_sounds = require("__base__.prototypes.item_sounds")
 local item_tints = require("__base__.prototypes.item-tints")
 local simulations = require("__base__.prototypes.factoriopedia-simulations")
 
-local data_cost_per_distance = 350 --TODO make mod setting
+
 
 data:extend({
   {
@@ -83,7 +83,7 @@ data:extend({
 
 })
 
-local function Telescopic:create_hidden_research_item(input_planet_name)
+local function create_hidden_research_item(input_planet_name)
     return 	{
 		type = "tool",
 		name = input_planet_name .. "-discovery-progress",
@@ -96,11 +96,20 @@ local function Telescopic:create_hidden_research_item(input_planet_name)
 		default_import_location = "nauvis",
 		weight = 1 * 1000 * 1000000,
 		durability = 1,
-        auto_recycle = false,
+    auto_recycle = false,
 	}
 end
 
-local function Telescopic:create_progress_recipe_icon(input_planet_name)
+local function create_progress_recipe_icon(input_planet_name)
+    if(input_planet_name == nil or data.raw.planet[input_planet_name] == nil) then
+      return {
+            {
+                icon = "__telescopic-discovery__/graphics/icons/radar.png",
+                icon_size = 64,
+            }
+        }
+    end
+  
     if (data.raw.planet[input_planet_name].icon == nil) then
         return {
             {
@@ -124,9 +133,9 @@ local function Telescopic:create_progress_recipe_icon(input_planet_name)
 end
 
 
-local function Telescopic:create_research_progress_recipe(input_planet_name)
+local function create_research_progress_recipe(input_planet_name)
     local progress_name = input_planet_name .. "-discovery-progress"
-    table.insert(data.raw.lab.inputs,progress_name)
+
     return {
         icons = create_progress_recipe_icon(input_planet_name),
         type = "recipe",
@@ -143,7 +152,7 @@ local function Telescopic:create_research_progress_recipe(input_planet_name)
         results =
         {
           {type ="item", name ="writable-memory", amount = 1, ignored_by_productivity = 9999},
-          {type ="research-progress", name = progress_name, amount = 1},
+          {type ="research-progress", research_item = progress_name, amount = 1},
         },
         allow_productivity = true,
         allow_quality = false,
@@ -154,19 +163,37 @@ local function Telescopic:create_research_progress_recipe(input_planet_name)
     }
 end
 
-local function Telescopic:does_planet_discovery_research_exist(input_planet_name)
-    local test_name = "planet-disovery-" .. input_planet_name
-    local out = data.raw.technology[test_name] ~= nil
+local function does_planet_discovery_research_exist(input_planet_name)
+    if (input_planet_name == nil) then
+      return false
+    end
+    local test_name = "planet-discovery-" .. input_planet_name
+    --log(serpent.block(test_name))
+    local out = (data.raw.technology[test_name] ~= nil)
+    --log(serpent.block(data.raw.technology[test_name] ~= nil))
     return out
 end
 
 local planet_blacklist = {}
 
-local function Telescopic:update_planet_research(input_planet_name) -- Assuming planet research exist
+local function update_planet_research(input_planet_name) -- Assuming planet research exist
+
     local progress_name = input_planet_name .. "-discovery-progress"
-    local research_name = "planet-disovery-" .. input_planet_name
-    local distance = data.raw.planet[input_planet_name]["distance"]
-    local multiplier = math.log(math.floor(distance))
+    local research_name = "planet-discovery-" .. input_planet_name
+    local data_cost_per_distance = 350 --TODO make mod setting
+
+    local distance = 10
+    if(data.raw.planet[input_planet_name]~= nil) then
+      distance = data.raw.planet[input_planet_name]["distance"]
+    end
+    if(data.raw["space-location"][input_planet_name] ~= nil) then
+      distance = data.raw["space-location"][input_planet_name]["distance"]
+    end
+
+    if(distance < 10) then distance = 10 end
+
+    local multiplier = math.log(math.floor(distance*4))
+
     local new_unit = {
         count = multiplier * data_cost_per_distance,
         ingredients = {
@@ -174,7 +201,13 @@ local function Telescopic:update_planet_research(input_planet_name) -- Assuming 
         },
         time = 60,
     }
-    data.raw.technology[research_name][unit] = new_unit
+    --log(serpent.block(data.raw.technology[research_name]))
+    data.raw.technology[research_name]["unit"] = new_unit
+    table.insert(data.raw.lab.lab.inputs,progress_name)
+    --table.insert(data.raw.technology[research_name].unit.ingredients,{progress_name,1})
+    --log(serpent.block(planet))
+    --log(serpent.block(data.raw.technology[research_name]))
+    --log(serpent.block("-------"))
 
 end
 
@@ -216,15 +249,32 @@ end
 4. If there is a discovery research, get the number of science packs. Multiply by 500, and change the ingredient/unit
 ]]
 
---local planet_map = {}
-
-for planet in pairs(data.raw.planet) do
-    local exist = Telescopic.does_planet_discovery_research_exist(planet)
+--Some gas giants are space locations.
+--I tried to combine both planet and space location data into one array, but it didn't work and I don't know why
+for planet in pairs(data.raw["planet"]) do
+    local exist = does_planet_discovery_research_exist(planet)
+    --log(serpent.block(planet))
+    --log(serpent.block(exist))
+    --log(serpent.block("-------"))
     if(exist) then
         data:extend({
-          Telescopic.create_hidden_research_item(planet),
-          Telescopic.create_research_progress_recipe(planet),
+          create_hidden_research_item(planet),
+          create_research_progress_recipe(planet),
         })
-        Telescopic.update_planet_research(planet)
+        update_planet_research(planet)
+    end
+end
+
+for planet in pairs(data.raw["space-location"]) do
+    local exist = does_planet_discovery_research_exist(planet)
+    --log(serpent.block(planet))
+    --log(serpent.block(exist))
+    --log(serpent.block("-------"))
+    if(exist) then
+        data:extend({
+          create_hidden_research_item(planet),
+          create_research_progress_recipe(planet),
+        })
+        update_planet_research(planet)
     end
 end
