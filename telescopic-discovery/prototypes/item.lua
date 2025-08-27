@@ -88,8 +88,9 @@ local function create_hidden_research_item(input_planet_name)
 		type = "tool",
 		name = input_planet_name .. "-discovery-progress",
 		hidden = true,
-		icon = "__base__/graphics/icons/signal/signal-science-pack.png",
-		icon_size = 64,
+		--icon = "__base__/graphics/icons/signal/signal-science-pack.png",
+		--icon_size = 64,
+    icons = create_progress_recipe_icon(input_planet_name),
 		subgroup = "science-pack",
 		order = "z-["..input_planet_name .. "]",
 		stack_size = 200,
@@ -123,6 +124,7 @@ local function create_progress_recipe_icon(input_planet_name)
         {
             icon = data.raw.planet[input_planet_name].icon,
             icon_size = data.raw.planet[input_planet_name].icon_size,
+            scale = 1,
         },
         {
             icon = "__telescopic-discovery__/graphics/icons/radar.png",
