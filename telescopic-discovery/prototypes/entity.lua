@@ -63,38 +63,43 @@ data:extend({
     collision_box = {{-1.2, -1.2}, {1.2, 1.2}},
     selection_box = {{-1.5, -1.5}, {1.5, 1.5}},
     damaged_trigger_effect = hit_effects.entity(),
+    perceived_performance = { minimum = 0.0, performance_to_activity_rate = 2.0, maximum = 3 },
     graphics_set =
     {
       animation =
       {
-      layers =
-      {
+        layers =
         {
-          filename = "__telescopic-discovery__/graphics/entity/radar/radar.png",
-          priority = "low",
-          width = 196,
-          height = 254,
-          apply_projection = false,
-          --direction_count = 64,
-          line_length = 8,
-          shift = util.by_pixel(1.0, -16.0),
-          scale = 0.5,
-          run_mode = "forward-then-backward",
-        },
-        {
-          filename = "__telescopic-discovery__/graphics/entity/radar/radar-shadow.png",
-          priority = "low",
-          width = 336,
-          height = 170,
-          apply_projection = false,
-          --direction_count = 64,
-          line_length = 8,
-          shift = util.by_pixel(39.0, 6.0),
-          draw_as_shadow = true,
-          scale = 0.5,
-          run_mode = "forward-then-backward",
+          {
+            filename = "__telescopic-discovery__/graphics/entity/radar/radar.png",
+            priority = "low",
+            width = 196,
+            height = 254,
+            apply_projection = false,
+            --direction_count = 64,
+            line_length = 8,
+            shift = util.by_pixel(1.0, -16.0),
+            scale = 0.5,
+            frame_count = 64,
+            --run_mode = "forward-then-backward",
+             
+          },
+          {
+            filename = "__telescopic-discovery__/graphics/entity/radar/radar-shadow.png",
+            priority = "low",
+            width = 336,
+            height = 170,
+            apply_projection = false,
+            --direction_count = 64,
+            line_length = 8,
+            shift = util.by_pixel(39.0, 6.0),
+            draw_as_shadow = true,
+            scale = 0.5,
+            frame_count = 64,
+            --run_mode = "forward-then-backward",
+             
+          }
         }
-      }
       },
     },
     open_sound = sounds.machine_open,
@@ -149,7 +154,7 @@ data:extend({
       drawing_box_vertical_extension = 0.0,
       module_slots = 3,
       allowed_effects = {"consumption", "speed", "productivity", "pollution"},
-      
+      perceived_performance = { minimum = 0.0, performance_to_activity_rate = 2.0, maximum = 4 },
 
       graphics_set =
       {
@@ -164,6 +169,7 @@ data:extend({
                       frame_count = 64,
                       line_length = 8,
                       scale = 0.5,
+                       
                   },
                   {
                       filename = "__telescopic-discovery__/graphics/entity/cybernetics-facility/cybernetics-facility-hr-emission-1.png",
@@ -174,6 +180,7 @@ data:extend({
                       scale = 0.5,
                       --draw_as_light = true,
                       blend_mode = "additive",
+                       
                   },
                   {
                       filename = "__telescopic-discovery__/graphics/entity/cybernetics-facility/cybernetics-facility-hr-shadow.png",
@@ -185,6 +192,7 @@ data:extend({
                       draw_as_shadow = true,
                       repeat_count = 64,
                       scale = 0.5,
+                       
                   }
               },
           },
@@ -199,6 +207,7 @@ data:extend({
                       frame_count = 64,
                       line_length = 8,
                       scale = 0.5,
+                       
                   },
                   {
                       filename = "__telescopic-discovery__/graphics/entity/cybernetics-facility/cybernetics-facility-hr-shadow.png",
@@ -210,6 +219,7 @@ data:extend({
                       draw_as_shadow = true,
                       repeat_count = 64,
                       scale = 0.5,
+                       
                   }
               },
           },

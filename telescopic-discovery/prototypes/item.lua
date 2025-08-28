@@ -83,11 +83,49 @@ data:extend({
 
 })
 
+
+local function create_progress_recipe_icon(input_planet_name)
+    if(input_planet_name == nil or (data.raw.planet[input_planet_name] == nil and data.raw["space-location"][input_planet_name] == nil )) then
+      return {
+            {
+                icon = "__telescopic-discovery__/graphics/icons/radar.png",
+                icon_size = 64,
+            }
+        }
+    end
+    local icon_data = "__telescopic-discovery__/graphics/icons/radar.png"
+    local icon_size_data = 64
+    if(data.raw.planet[input_planet_name]) then
+      icon_data = data.raw.planet[input_planet_name].icon
+      icon_size_data = data.raw.planet[input_planet_name].icon_size
+    end
+
+    --Gas giants as space location
+    if(data.raw["space-location"][input_planet_name]) then
+      icon_data = data.raw["space-location"][input_planet_name].icon
+      icon_size_data = data.raw["space-location"][input_planet_name].icon_size
+    end
+
+    return {
+        {
+            icon = icon_data,
+            icon_size = icon_size_data,
+            scale = 1,
+        },
+        {
+            icon = "__telescopic-discovery__/graphics/icons/radar.png",
+            icon_size = 64,
+            scale = 0.5,
+        }
+    }
+end
+
+
 local function create_hidden_research_item(input_planet_name)
     return 	{
 		type = "tool",
 		name = input_planet_name .. "-discovery-progress",
-    localised_name = {"?", {"", {"space-location."..input_planet_name}, "item-name.discovery-progress"}, {"planet."..input_planet_name}, "item-name.discovery-progress"},
+    localised_name = {"?", {"", {"planet."..input_planet_name}, "item-name.discovery-progress"}, {"space-location."..input_planet_name}, input_planet_name .. " discovery"},
 		hidden = true,
 		--icon = "__base__/graphics/icons/signal/signal-science-pack.png",
 		--icon_size = 64,
@@ -102,39 +140,6 @@ local function create_hidden_research_item(input_planet_name)
 	}
 end
 
-local function create_progress_recipe_icon(input_planet_name)
-    if(input_planet_name == nil or data.raw.planet[input_planet_name] == nil) then
-      return {
-            {
-                icon = "__telescopic-discovery__/graphics/icons/radar.png",
-                icon_size = 64,
-            }
-        }
-    end
-  
-    if (data.raw.planet[input_planet_name].icon == nil) then
-        return {
-            {
-                icon = "__telescopic-discovery__/graphics/icons/radar.png",
-                icon_size = 64,
-            }
-        }
-    end
-
-    return {
-        {
-            icon = data.raw.planet[input_planet_name].icon,
-            icon_size = data.raw.planet[input_planet_name].icon_size,
-            scale = 1,
-        },
-        {
-            icon = "__telescopic-discovery__/graphics/icons/radar.png",
-            icon_size = 64,
-            scale = 0.5,
-        }
-    }
-end
-
 
 local function create_research_progress_recipe(input_planet_name)
     local progress_name = input_planet_name .. "-discovery-progress"
@@ -142,8 +147,9 @@ local function create_research_progress_recipe(input_planet_name)
     return {
         icons = create_progress_recipe_icon(input_planet_name),
         type = "recipe",
+        hide_from_player_crafting = true,
         name = input_planet_name .. "-data-process",
-        localised_name = {"?", {"", {"space-location."..input_planet_name}, "item-name.discovery-progress"}, {"planet."..input_planet_name}, "item-name.discovery-progress"},
+        localised_name = {"?", {"", {"space-location."..input_planet_name}, "item-name.discovery-progress"}, {"planet."..input_planet_name}, input_planet_name .. " discovery"},
         category ="data-processing",
         enabled = true,
         subgroup = "telescope",
@@ -184,7 +190,7 @@ local function update_planet_research(input_planet_name) -- Assuming planet rese
 
     local progress_name = input_planet_name .. "-discovery-progress"
     local research_name = "planet-discovery-" .. input_planet_name
-    local data_cost_per_distance = 150 --TODO make mod setting
+    local data_cost_per_distance = settings.startup["data_cost_per_distance"].value
 
     local distance = 10
     if(data.raw.planet[input_planet_name]~= nil) then

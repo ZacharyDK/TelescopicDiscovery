@@ -203,8 +203,9 @@ local function create_data_to_science_recipe(input_science_pack_name)
     local data_cost = get_data_cost(input_science_pack_name)
     return {
         type = "recipe",
+        hide_from_player_crafting = true,
         name = recipe_name,
-        localised_name = {"", {"item-name."..input_science_pack_name}, "item-name.from-data"},
+        localised_name = {"", {"item-name."..input_science_pack_name}, " from data"},
         category ="data-processing",
         enabled = true,
         subgroup = "telescope",
@@ -229,6 +230,12 @@ local function create_data_to_science_recipe(input_science_pack_name)
     }
 end
 
-for s in pairs(data.raw.subgroup["science-pack"]) do
-  data:extend({create_data_to_science_recipe(s)})
+for __, s in pairs(data.raw['lab']['lab'].inputs) do
+  --log(serpent.block(s))
+  -- search "science" works but "science-pack" does not work
+  if( string.find(s,"science") ~= nil) then 
+    data:extend({create_data_to_science_recipe(s)})
+  else
+    --log(serpent.block("failure"))
+  end
 end
