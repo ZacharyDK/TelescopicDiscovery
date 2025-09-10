@@ -213,7 +213,7 @@ local function update_planet_research(input_planet_name) -- Assuming planet rese
     }
     --log(serpent.block(data.raw.technology[research_name]))
     data.raw.technology[research_name]["unit"] = new_unit
-    table.insert(data.raw.lab.lab.inputs,progress_name)
+    table.insert(data.raw.lab.biolab.inputs,progress_name) --Science in biolabs ensures Secretas won't pick it up
     --table.insert(data.raw.technology[research_name].unit.ingredients,{progress_name,1})
     --log(serpent.block(planet))
     --log(serpent.block(data.raw.technology[research_name]))

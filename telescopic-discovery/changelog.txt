@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.0.1
+Date: 9. 10. 2025
+  Major Features:
+    - Ensured all planet discovery researches only have input_planet_name .. "-discovery-progress" research item in the unit cost in final fixes
+    - Otherwise the research progress as a recipe result won't work
+    - Should fix Secretas science pack productivity adding these hidden sciences. 
+---------------------------------------------------------------------------------------------------
 Version: 1.0.0
 Date: 8. 27. 2025
   Major Features:

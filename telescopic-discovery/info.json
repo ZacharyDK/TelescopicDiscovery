@@ -1,11 +1,12 @@
 {
     "name": "telescopic-discovery",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "title": "Telescopic Planet Discovery",
     "author": "ZDK, 2025",
     "factorio_version": "2.0",
     "dependencies": ["base >= 2.0",
-    "space-age >= 2.0"
+    "space-age >= 2.0",
+    "? outer-rim >= 0.3.3"
     ],
     "description": "Overhauls planet discovery"
   }
