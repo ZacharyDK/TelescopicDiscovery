@@ -30,6 +30,10 @@ local function clean_planet_research(input_planet_name)
     data.raw.technology[research_name]["unit"]['ingredients'] = new_ingredients
 end 
 
+
+
+
+
 --[[
 for planet in pairs(data.raw["planet"]) do
     local exist = does_planet_discovery_research_exist(planet)

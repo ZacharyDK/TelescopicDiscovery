@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.0.2
+Date: 7. 4. 2026
+  Major Features:
+    - 2.1 update
+    - telescopic-data-processor is now a lab
+    - Unfortunately it now has to eat the "data cards" that you put in. 
+    - Added productivity for telescopic data to science pack
+---------------------------------------------------------------------------------------------------
 Version: 1.0.1
 Date: 9. 10. 2025
   Major Features:

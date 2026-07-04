@@ -136,7 +136,7 @@ data:extend({
     }
   },
   {
-      type = "assembling-machine",
+      type = "lab",--"assembling-machine",
       name = "telescopic-data-processor",
       icon = "__telescopic-discovery__/graphics/icons/cybernetics-facility-icon.png",
       icon_size = 64,
@@ -153,10 +153,10 @@ data:extend({
       damaged_trigger_effect = hit_effects.entity(),
       drawing_box_vertical_extension = 0.0,
       module_slots = 3,
-      allowed_effects = {"consumption", "speed", "productivity", "pollution"},
+      --allowed_effects = {"consumption", "speed", "productivity", "pollution"},
       perceived_performance = { minimum = 0.0, performance_to_activity_rate = 2.0, maximum = 4 },
 
-      graphics_set =
+      graphics_set = --When it was an assembling machine
       {
           animation = 
           {
@@ -224,6 +224,78 @@ data:extend({
               },
           },
       },
+
+      researching_speed = 1,
+      inputs =
+      {
+        "astronomical-data"
+      },
+      on_animation = 
+      {
+        layers = 
+        {
+            {
+                filename = "__telescopic-discovery__/graphics/entity/cybernetics-facility/cybernetics-facility-hr-animation-1.png",
+                width = 270,
+                height = 310,
+                frame_count = 64,
+                line_length = 8,
+                scale = 0.5,
+                  
+            },
+            {
+                filename = "__telescopic-discovery__/graphics/entity/cybernetics-facility/cybernetics-facility-hr-emission-1.png",
+                width = 270,
+                height = 310,
+                frame_count = 64,
+                line_length = 8,
+                scale = 0.5,
+                --draw_as_light = true,
+                blend_mode = "additive",
+                  
+            },
+            {
+                filename = "__telescopic-discovery__/graphics/entity/cybernetics-facility/cybernetics-facility-hr-shadow.png",
+                --shift = util.by_pixel(8, 39),
+                width = 500,
+                height = 350,
+                frame_count = 1,
+                line_length = 1,
+                draw_as_shadow = true,
+                repeat_count = 64,
+                scale = 0.5,
+                  
+            }
+        },
+      },
+      off_animation = 
+      {
+        layers =
+        {
+            {
+                filename = "__telescopic-discovery__/graphics/entity/cybernetics-facility/cybernetics-facility-hr-animation-1.png",
+                width = 270,
+                height = 310,
+                frame_count = 64,
+                line_length = 8,
+                scale = 0.5,
+                  
+            },
+            {
+                filename = "__telescopic-discovery__/graphics/entity/cybernetics-facility/cybernetics-facility-hr-shadow.png",
+                --shift = util.by_pixel(8, 39),
+                width = 500,
+                height = 350,
+                frame_count = 1,
+                line_length = 1,
+                draw_as_shadow = true,
+                repeat_count = 64,
+                scale = 0.5,
+                  
+            }
+        },
+      },
+
       impact_category = "metal-large",
       open_sound = { filename = "__base__/sound/open-close/lab-open.ogg", volume = 0.6 },
       close_sound = { filename = "__base__/sound/open-close/lab-close.ogg", volume = 0.6 },
@@ -234,7 +306,7 @@ data:extend({
         fade_in_ticks = 4,
         fade_out_ticks = 20
       },
-      crafting_speed = 1,
+      --crafting_speed = 1,
       energy_source =
       {
           type = "electric",
@@ -243,6 +315,16 @@ data:extend({
       },
       energy_usage = "500kW",
       crafting_categories = {"data-processing"},
+      frozen_patch =
+      {
+        filename = "__telescopic-discovery__/graphics/entity/cybernetics-facility/cybernetics-facility-hr-frozen-1.png",
+        width = 270,
+        height = 310,
+        --shift = util.by_pixel(1, -16),
+        scale = 0.5,
+        direction_count = 1
+      },
+      heating_energy = "100kW",
 
   },
 })

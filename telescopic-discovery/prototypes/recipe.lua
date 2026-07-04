@@ -1,14 +1,15 @@
---TODO
 -- Voyager memory Unit from astronomical data
 -- Unpack voyager memory
 -- radio telescope recipe + entity
 -- data processor. Krastorio has quantum computer,and server rack
+--TODO pressure sensitive variants. More data on Frozen planets, 
 
 data:extend({
-    { --TODO pressure sensitive variants. More data on Frozen planets, 
+    { 
         type = "recipe",
-        name = "astronomical-data",
-        category ="data-collection",
+        name = "astronomical-data", --Would have been nice to get these back after the lab uses them
+        --category ="data-collection",
+        categories = {"data-collection"},
         enabled = false,
         subgroup = "telescope",
         ingredients =
@@ -33,7 +34,7 @@ data:extend({
         type = "recipe",
         name = "volatile-memory-unit",
         order = "f",
-        category ="advanced-crafting",
+        categories ={"advanced-crafting"},
         enabled = false,
         --subgroup = "telescope",
         ingredients =
@@ -54,7 +55,7 @@ data:extend({
         type = "recipe",
         name = "writable-memory",
         order = "f",
-        category ="advanced-crafting",
+        categories ={"advanced-crafting"},
         enabled = false,
         --subgroup = "telescope",
         ingredients =
@@ -75,7 +76,7 @@ data:extend({
     { 
       type = "recipe",
       name = "voyager-memory-unit",
-      category ="advanced-crafting",
+      categories ={"advanced-crafting"},
       enabled = false,
       subgroup = "telescope",
       ingredients =
@@ -112,7 +113,7 @@ data:extend({
       },
       type = "recipe",
       name = "voyager-memory-unit-unpack",
-      category ="advanced-crafting",
+      categories ={"advanced-crafting"},
       enabled = false,
       subgroup = "telescope",
       ingredients =
@@ -139,7 +140,7 @@ data:extend({
       type = "recipe",
       name = "radiotelescope",
       order = "f",
-      category ="advanced-crafting",
+      categories ={"advanced-crafting"},
       enabled = false,
       --subgroup = "telescope",
       ingredients =
@@ -161,7 +162,7 @@ data:extend({
       type = "recipe",
       name = "telescopic-data-processor",
       order = "f",
-      category ="advanced-crafting",
+      categories ={"advanced-crafting"},
       enabled = false,
       --subgroup = "telescope",
       ingredients =
@@ -206,7 +207,8 @@ local function create_data_to_science_recipe(input_science_pack_name)
         hide_from_player_crafting = true,
         name = recipe_name,
         localised_name = {"", {"item-name."..input_science_pack_name}, " from data"},
-        category ="data-processing",
+        --category ="data-processing", --Don't have a data processor now that its a lab :(
+        categories = {"advanced-crafting"},
         enabled = true,
         subgroup = "telescope",
         ingredients =
@@ -224,6 +226,7 @@ local function create_data_to_science_recipe(input_science_pack_name)
         allow_productivity = true,
         allow_quality = false,
         auto_recycle = false,
+        hide_from_signal_gui = false,
         main_product =input_science_pack_name,
         maximum_productivity = 3,
         order = "g" .. tostring(data_cost),
@@ -239,3 +242,4 @@ for __, s in pairs(data.raw['lab']['lab'].inputs) do
     --log(serpent.block("failure"))
   end
 end
+

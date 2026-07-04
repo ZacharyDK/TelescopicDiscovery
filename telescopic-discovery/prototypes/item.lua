@@ -120,7 +120,7 @@ local function create_progress_recipe_icon(input_planet_name)
     }
 end
 
-
+--[[ --Deprecated 
 local function create_hidden_research_item(input_planet_name)
     return 	{
 		type = "tool",
@@ -139,6 +139,7 @@ local function create_hidden_research_item(input_planet_name)
     auto_recycle = false,
 	}
 end
+
 
 
 local function create_research_progress_recipe(input_planet_name)
@@ -172,6 +173,8 @@ local function create_research_progress_recipe(input_planet_name)
         order = "f",
     }
 end
+--]]
+
 
 local function does_planet_discovery_research_exist(input_planet_name)
     if (input_planet_name == nil) then
@@ -207,13 +210,14 @@ local function update_planet_research(input_planet_name) -- Assuming planet rese
     local new_unit = {
         count = multiplier * data_cost_per_distance,
         ingredients = {
-            { progress_name, 1 },
+            { "astronomical-data", 1 },
+
         },
         time = 60,
     }
     --log(serpent.block(data.raw.technology[research_name]))
     data.raw.technology[research_name]["unit"] = new_unit
-    table.insert(data.raw.lab.biolab.inputs,progress_name) --Science in biolabs ensures Secretas won't pick it up
+    --table.insert(data.raw.lab.biolab.inputs,progress_name) --Science in biolabs ensures Secretas won't pick it up
     --table.insert(data.raw.technology[research_name].unit.ingredients,{progress_name,1})
     --log(serpent.block(planet))
     --log(serpent.block(data.raw.technology[research_name]))
@@ -221,43 +225,41 @@ local function update_planet_research(input_planet_name) -- Assuming planet rese
 
 end
 
+data:extend(
+{
+    {
+      type = "technology",
+      name = "astronomical-data-to-science-productivity",
+      icons = util.technology_icon_constant_recipe_productivity("__space-age__/graphics/technology/research-productivity.png"),
+      icon_size = 256,
+      icon_size = 256,
+      effects =
+      {
+
+      },
+      prerequisites = {},
+      unit =
+      {
+        count_formula = "1.5^L*800",
+        ingredients =
+        {
+          {"astronomical-data", 1},
+
+        },
+        time = 120
+      },
+      max_level = "infinite",
+      upgrade = true
+    }
+}
+)
 
 
 --TODO create fluoroketone and water cooled variants. 
 --As well as water dumping recipe and water cooling
---TOD deep astron data.
+--TODO deep astron data.
 
 
---[[
---Steps for creating a research from a recipe
-1. Create hidden tool
-	{
-		type = "tool",
-		name = "fulgoran-cryogenics-progress",
-		hidden = true,
-		icon = "__PlanetsLib__/graphics/icons/research-progress-product.png",
-		icon_size = 64,
-		subgroup = "science-pack",
-		order = "j-a[cerys]-b[fulgoran-cryogenics-progress]",
-		stack_size = 200,
-		default_import_location = "cerys",
-		weight = 1 * 1000 * 1000000,
-		durability = 1,
-	},
-2. Add tool as lab input to prevent game from throwing no lab except science pack error
-3. Ingredients to technology will be the name of the hidden item, instead of the science pack
-4. Add research progress prototype to recipe 
-]]
-
---[[
---Planning 
-0. Need new recipe type - data-processing, ticks on astronomical data for spoilage, 
-1. Step 1 - Create function to create research for planets with no discovery. 
-2. Step 2 - Create list of planets,
-3. For each planet - create a hidden tool item. Then add them to the regular lab. Also create data to discovery research progress recipe
-4. For each planet, check if there is a research 
-4. If there is a discovery research, get the number of science packs. Multiply by 500, and change the ingredient/unit
-]]
 
 --Some gas giants are space locations.
 --I tried to combine both planet and space location data into one array, but it didn't work and I don't know why
@@ -267,10 +269,7 @@ for planet in pairs(data.raw["planet"]) do
     --log(serpent.block(exist))
     --log(serpent.block("-------"))
     if(exist) then
-        data:extend({
-          create_hidden_research_item(planet),
-          create_research_progress_recipe(planet),
-        })
+        table.insert(data.raw.technology["astronomical-data-to-science-productivity"]["prerequisites"],"planet-discovery-" .. planet)
         update_planet_research(planet)
     end
 end
@@ -281,10 +280,27 @@ for planet in pairs(data.raw["space-location"]) do
     --log(serpent.block(exist))
     --log(serpent.block("-------"))
     if(exist) then
+        --[[
         data:extend({
           create_hidden_research_item(planet),
           create_research_progress_recipe(planet),
         })
+        --]]
+        table.insert(data.raw.technology["astronomical-data-to-science-productivity"]["prerequisites"],"planet-discovery-" .. planet)
         update_planet_research(planet)
     end
 end
+
+
+
+for __, s in pairs(data.raw['lab']['lab'].inputs) do
+  --log(serpent.block(s))
+  -- search "science" works but "science-pack" does not work
+  if( string.find(s,"science") ~= nil) then 
+    local recipe_name = s .. "-from-data"
+    table.insert(data.raw.technology["astronomical-data-to-science-productivity"]["effects"],{type = "change-recipe-productivity", change = 0.03, recipe = recipe_name})
+  else
+    --log(serpent.block("failure"))
+  end
+end
+
